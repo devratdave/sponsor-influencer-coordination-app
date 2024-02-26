@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+	<br/>
+	<h2>You Searched For: <em>{{ searched }}</em></h2>
+	
+	<br/>
+	{% if results %}
+
+	{% for result in results %}
+		<div class="shadow p-3 mb-5 bg-body rounded">
+	<h2>{{ result.name }}</h2>
+	<small>Name: {{ result.name }}<br/>
+	Rs. {{ result.price }} /{{ result.unit }}<br/>
+    Category: {{ result.category }}<br/>
+	Manufacturing Date: {{ result.manufacturingdate.date() }}<br/>
+	Expiry Date: {% if result.expirydate %} {{ result.expirydate.date() }} {% else %} No Expiry 
+	{% endif %}<br/>
+	Stock: {% if result.stock >= 1 %} In Stock {% else %} Out of stock {% endif %}
+	</small> <br/><br/>
+</div>
+	<br/>
+		{% endfor %}
+
+	{% else %}
+	Sorry, your search term: <strong>{{ searched }}</strong> was not found...
+	{% endif %}
+{% endblock %}

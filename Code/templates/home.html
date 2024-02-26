@@ -1,0 +1,129 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+
+	<div class="w-30 p-3 mb-5 bg-body">
+		<h2>All Products</h2>
+			<br/>
+		{% if products %}
+		<div>
+		{% for category in categories %}
+		<div class="card mb-3">
+			<h4 class="card-header">
+				<b>{{ category.name }}</b>
+			</h4>
+			<div class="card-body row d-flex justify-content-around">
+				{% for product in products %}
+				{% if product.category==category.name %}
+				{% if product.stock >=1 %}
+				<div class="card col-5 mb-3 p-0">
+					<div class="card-header">
+						{{ product.name }}
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ product.name }}<br/>
+						
+								<strong>Price:</strong>
+								Rs. {{ product.price }}{{ product.unit.split('.')[1] }}<br/>
+						
+								<strong>Manufacturing Date:</strong>
+								{{ product.manufacturingdate.date() }}<br/>
+		
+								{% if product.expirydate %}
+								<strong>Expiry Date:</strong>
+								{{ product.expirydate.date() }}<br/>
+								{% else %}
+								<strong>Expiry Date:</strong>
+								No expiry<br/>
+								{% endif %}
+
+					<form method="post", action="{{ url_for('home') }}">
+						<input type="hidden" name="submit_button" value="{{ product.id }}"/>
+						<strong><label for="" class="">Quantity: </label></strong>
+						<input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+						<button type="submit" class="btn btn-sm btn-dark block my-2">Add to cart</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</p>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+</div>
+</div>
+{% endfor %}
+</div>
+<div class="card mb-3">
+	<h4 class="card-header">
+		<b>Out of stock products</b>
+	</h4>
+	<div class="card-body row d-flex justify-content-around">
+		{% for product in products %}
+		{% if 1 > product.stock %}
+		<div class="card col-5 mb-3 p-0">
+			<div class="card-header">
+				{{ product.name }}
+			</div>
+			<div class="card-body">
+				<p class="card-text">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+				
+						<strong>Name:</strong>
+						{{ product.name }}<br/>
+				
+						<strong>Price:</strong>
+						Rs. {{ product.price }}{{ product.unit.split('.')[1] }}<br/>
+				
+						<strong>Category:</strong>
+						{{ product.category }}<br/>
+
+						<strong>Manufacturing Date:</strong>
+						{{ product.manufacturingdate.date() }}<br/>
+
+						{% if product.expirydate %}
+						<strong>Expiry Date:</strong>
+						{{ product.expirydate.date() }}<br/>
+						{% else %}
+						<strong>Expiry Date:</strong>
+						No expiry<br/>
+						{% endif %}
+
+			<button class="btn btn-sm btn-danger block">Product is out of stock</button>
+		</div>
+	</div>
+</div>
+</p>
+</div>
+</div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+{% else %}
+There are no products added yet
+<br/>
+{% endif %}
+</div>
+</div>
+{% endblock %}
