@@ -70,7 +70,7 @@
 </div>
 
 <div class="card my-3">
-	<h2 class="card-header">Products Sold</h2>
+	<h2 class="card-header">Category-wise Products Sold</h2>
 	<div class="card-body">
 		<canvas id="myCategoryBarGraph"></canvas>
         <script>
@@ -80,7 +80,7 @@
                 data: {
                     labels: [{%for x in category_labels%}"{{x}}",{%endfor%}],
                     datasets: [{
-                        label: "Products Sold",
+                        label: "Category-wise Products Sold",
                         data: [{%for d in category_values%}{{d}},{%endfor%}],
                         borderwidth: 5
                     }]

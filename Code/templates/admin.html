@@ -29,7 +29,7 @@
 				<b>{{ category.name }}</b>
 				<form method="post", action="{{ url_for('admin') }}">
 					<input type="hidden" name="category_deletion" value="{{ category.id }}"/>
-					<button type="submit" class="btn btn-sm btn-dark block my-2">Delete {{ category.name }} from app</button>
+					<button type="submit" class="btn btn-sm btn-danger block my-2">Delete {{ category.name }} from app</button>
 				</form>
 			</h4>
 			<div class="card-body row d-flex justify-content-around">

@@ -82,6 +82,7 @@ def login():
 def home():
     products= Product.query.filter().all()
     categories= Category.query.filter().all()
+    cart_of_user= Cart.query.filter_by(user_id=current_user.id).all()
     if request.method=='POST':
         ## Adding the product in the cart
         product_id= request.form.get('submit_button')
@@ -90,9 +91,14 @@ def home():
             quantity= int(request.form.get('quantity'))
             ## Check if the product is already added in the cart, then updates the quantity
             cart_exists= Cart.query.filter_by(product=product.name, user_id=current_user.id).first()
-            if cart_exists:
-                cart_exists.quantity=cart_exists.quantity+quantity  
-                flash('Product has been updated in cart')
+            if product.stock < quantity:
+                flash("Sorry we dont have this much stock for this product, reduce the quantity and try again")
+            elif cart_exists:
+                if cart_exists.quantity >= product.stock:
+                    flash("No more quantity of this product can be added")
+                else:
+                    cart_exists.quantity=cart_exists.quantity+quantity  
+                    flash('Product has been updated in cart')
             else:
                 cart_product= Cart(product=product.name, user_id=current_user.id , quantity=quantity, unitprice=product.price, unit=product.unit)
                 db.session.add(cart_product)
@@ -101,7 +107,7 @@ def home():
             db.session.commit()
             return redirect(url_for('home'))
         
-    return render_template('home.html', products=products, categories=categories)
+    return render_template('home.html', products=products, categories=categories, cart_products=cart_of_user)
 
 
 ## Dashboard endpoints tells you the user details
@@ -317,7 +323,7 @@ def product_update(product_id):
                 if new_price:
                     product_toupdate.price= new_price
                 if new_stock:
-                    product_toupdate.stock= new_stock
+                    product_toupdate.stock+= new_stock
                 if new_manufacturingdate:
                     product_toupdate.manufacturingdate= new_manufacturingdate
                 if new_expirydate:

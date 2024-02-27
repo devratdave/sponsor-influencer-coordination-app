@@ -1,4 +1,4 @@
-from app import db, login_manager
+from app import db, app, login_manager
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -46,3 +46,7 @@ class Cart(db.Model):
     quantity= db.Column(db.Integer)
     unitprice= db.Column(db.Integer)
     unit= db.Column(db.String)
+
+
+with app.app_context():
+    db.create_all()
