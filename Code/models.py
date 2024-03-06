@@ -50,3 +50,5 @@ class Cart(db.Model):
 
 with app.app_context():
     db.create_all()
+    user= User(fullname= "Store Admin", username= "admin@store",
+               email= "admin@store.com", password="admin@store", role="admin")
