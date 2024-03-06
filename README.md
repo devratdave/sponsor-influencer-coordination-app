@@ -1,7 +1,7 @@
 # Grocery Store App
 
 ## Welcome
-## Follow these instructions to start the app and assign the admin:
+## Follow these instructions to start the app:
 ### 1. For MacOS
     - Open the terminal.
     - Change to the directory your project is currently in.
