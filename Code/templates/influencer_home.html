@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+
+	<div class="w-30 p-3 mb-5 bg-body">
+		<h2>All Campaigns</h2>
+			<br/>
+		{% if campaigns %}
+		<div>
+		<div class="card mb-3">
+			<div class="card-body row d-flex justify-content-around">
+			{% for campaign in campaigns %}
+			{% if campaign.private == False %}
+			{% if campaign.completed == False %}
+			{% if campaign.flagged == False %}
+			{% for sponsor in sponsors %}
+			{% if campaign.sponsor == sponsor.id %}
+			{% if sponsor.flagged == False %}
+				<div class="card col-5 mb-3 p-0">
+					<div class="card-header">
+						<strong>{{ campaign.name }}</strong>
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ campaign.name }}<br/>
+								{% for sponsor in sponsor_details %}
+								{% if sponsor.user_id == campaign.sponsor %}
+								<strong>Industry:</strong>
+								{{ sponsor.industry }}<br/>
+								{% endif %}
+								{% endfor %}
+								
+                                <strong>Sponsor: </strong>{{ sponsor.name }}<br/>
+
+                                <strong>Influencers Required: {{ campaign.influencers_required }}</strong><br/>
+
+								<strong>Offer: Rs.{{ campaign.budget }}</strong> per influencer<br/>
+                                {{ campaign.description }}
+
+                                <form method="post", action="{{ url_for('influencer_home') }}">
+                                    <input type="hidden" name="send_request" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">Send a request</button>
+                                </form>
+
+                                <form method="post", action="{{ url_for('influencer_home') }}">
+                                    <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">View Campaign</button>
+                                </form>
+
+				</div>
+			</div>
+		</div>
+	</p>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+</div>
+</div>
+</div>
+{% else %}
+Sorry, No <strong>Campaigns</strong> were found...
+{% endif %}
+
+</div>
+</div>
+{% endblock %}

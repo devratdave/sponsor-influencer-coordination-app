@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+
+		{% if influencer %}
+		<div>
+			<h2>Influencer</h2>
+		<div class="card mb-3">
+			<div class="card-body row d-flex justify-content-around">
+				<div class="card col-5 mb-3 p-0">
+					<div class="card-header">
+						<strong>{{ influencer_details.name }}</strong>
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ influencer_details.name }}<br/>
+
+								<strong>Username:</strong>
+								{{ influencer_details.username }}<br/>
+
+								<strong>About Me:</strong>
+								{{ influencer_details.about_me }}<br/>
+
+                                <strong>Platforms:-</strong><br/>
+                                {% for platform in influencer %}
+                                    <strong>{{ platform.platform }}</strong> with <strong>{{ platform.followers }}</strong> followers<br/>
+                                {% endfor %}
+								
+								{% if current_user.type == 'Sponsor' %}
+                                <form method="post">
+									{{ form.hidden_tag() }}
+<br/>
+									<strong>{{ form.choice.label(class="form-label") }}</strong>
+									{% if form.choice.errors %}
+												{{ form.choice(class="form-control form-control-lg is-invalid") }}
+												<div class="invalid-feedback">
+													{% for error in form.choice.errors %}
+														<span>
+															{{ error }}
+														</span>
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ form.choice(class="form-control form-control-lg") }}
+										{% endif %}
+<br/>
+
+									<strong>{{ form.requirements.label(class="form-label") }}</strong>
+									{% if form.requirements.errors %}
+												{{ form.requirements(class="form-control form-control-lg is-invalid") }}
+												<div class="invalid-feedback">
+													{% for error in form.requirements.errors %}
+														<span>
+															{{ error }}
+														</span>
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ form.requirements(class="form-control form-control-lg") }}
+										{% endif %}
+
+<br/>
+									{{ form.invite(class="btn btn-dark btn-md") }}
+									<br/>
+                                </form>
+								{% endif %}
+
+								{% if current_user.type == 'admin' %}
+								{% if influencer_details.flagged == True %}
+								<form method="post">
+									<input type="hidden" name="unflag_influencer" value="{{ influencer_details.id }}"/>
+									<button type="submit" class="btn btn-sm btn-primary block my-2">Unflag Influencer</button>
+								</form>
+								{% else %}
+								<form method="post">
+									<input type="hidden" name="flag_influencer" value="{{ influencer_details.id }}"/>
+									<button type="submit" class="btn btn-sm btn-danger block my-2">Flag Influencer</button>
+								</form>
+								{% endif %}
+								{% endif %}
+
+				</div>
+			</div>
+		</div>
+	</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% else %}
+Sorry, No <strong>Campaign</strong> with this ID found...
+{% endif %}
+
+{% endblock %}

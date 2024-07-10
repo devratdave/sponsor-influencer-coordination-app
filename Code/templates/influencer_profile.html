@@ -1,0 +1,300 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	
+{% endfor %}
+
+<h2>Profile</h2>
+	<br/>
+
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <div class="card">
+        
+    <div class="card-body">
+      
+      <div class="container">
+          <div class="row">
+              <div class="col-12">
+      
+          {% if current_user.flagged == True %}<strong class="text-danger">Name:
+          {{ current_user.name }} (Flagged)</strong>{% else %}<strong>Name:
+            {{ current_user.name }} (Flagged)</strong>{% endif %}<br/>
+      
+          <strong>Username:</strong>
+          {{ current_user.username }}<br/>
+      
+          <strong>About Me:</strong>
+          {{ current_user.about_me }}<br/>
+           
+          <strong>Role:</strong>
+          {{ current_user.type }}<br/> 
+
+
+          {% if platforms %}
+          <form method='post' class="mb-3">
+            {{ form.hidden_tag() }}
+<br/>
+           <strong> {{ form.about_me.label(class="form-label") }}</strong>
+
+            {% if form.about_me.errors %}
+                    {{ form.about_me(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.about_me.errors %}
+                            <span>
+                                {{ error }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.about_me(class="form-control form-control-lg") }}
+                {% endif %}
+                <br/>
+            {% for platform in platforms %}
+
+          <!-- Instagram -->
+                {% if platform.platform == 'Instagram' %}
+                <strong>{{ form.Instagram.label(class="form-label") }}</strong>
+                <br/>
+                    Current Followers
+                <strong>{{ platform.followers }}</strong>
+                <br/>
+            
+                    {% if form.Instagram.errors %}
+                                {{ form.Instagram(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.Instagram.errors %}
+                                        <span>
+                                            {{ error }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.Instagram(class="form-control form-control-lg") }}
+                            {% endif %}
+                    <br/>
+
+
+          <!-- Facebook -->
+                {% elif platform.platform == 'Facebook' %}
+                <strong>{{ form.Facebook.label(class="form-label") }}</strong>
+                <br/>
+                    Current Followers
+                <strong>{{ platform.followers }}</strong>
+                <br/>
+            
+                    {% if form.Facebook.errors %}
+                                {{ form.Facebook(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.Facebook.errors %}
+                                        <span>
+                                            {{ error }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.Facebook(class="form-control form-control-lg") }}
+                            {% endif %}
+                    <br/>
+
+
+          <!-- Youtube -->
+                {% elif platform.platform == 'Youtube' %}
+                <strong>{{ form.Youtube.label(class="form-label") }}</strong>
+                <br/>
+                    Current Followers
+                <strong>{{ platform.followers }}</strong>
+                <br/>
+            
+                    {% if form.Youtube.errors %}
+                                {{ form.Youtube(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.Youtube.errors %}
+                                        <span>
+                                            {{ error }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.Youtube(class="form-control form-control-lg") }}
+                            {% endif %}
+                    <br/>
+
+
+          <!-- LinkedIn -->
+                {% elif platform.platform == 'Linkedin' %}
+                <strong>{{ form.Linkedin.label(class="form-label") }}</strong>
+                <br/>
+                    Current Followers
+                <strong>{{ platform.followers }}</strong>
+                <br/>
+            
+                    {% if form.Linkedin.errors %}
+                                {{ form.Linkedin(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.Linkedin.errors %}
+                                        <span>
+                                            {{ error }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.Linkedin(class="form-control form-control-lg") }}
+                            {% endif %}
+                    <br/>
+
+
+          <!-- Twitter -->
+                {% elif platform.platform == 'Twitter' %}
+                <strong>{{ form.Twitter.label(class="form-label") }}</strong>
+                <br/>
+                    Current Followers
+                <strong>{{ platform.followers }}</strong>
+                <br/>
+            
+                    {% if form.Twitter.errors %}
+                                {{ form.Twitter(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.Twitter.errors %}
+                                        <span>
+                                            {{ error }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.Twitter(class="form-control form-control-lg") }}
+                            {% endif %}
+                    <br/>
+
+
+          <!-- Reddit -->
+                {% elif platform.platform == 'Reddit' %}
+                <strong>{{ form.Reddit.label(class="form-label") }}</strong>
+                <br/>
+                    Current Followers
+                <strong>{{ platform.followers }}</strong>
+                <br/>
+            
+                    {% if form.Reddit.errors %}
+                                {{ form.Reddit(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.Reddit.errors %}
+                                        <span>
+                                            {{ error }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.Reddit(class="form-control form-control-lg") }}
+                            {% endif %}
+                    <br/>
+                
+                {% endif %}
+        {% endfor %}
+        {{ form.update(class="btn btn-secondary") }}
+
+    </form>
+        {% endif %}
+        <h3 class="text-success mt-5 mb">Campaigns:</h3><br/> 
+          {% if sponsor_invites or influencer_invites %}
+          <div>
+                <div class="card-body row d-flex justify-content-around">
+                {% for campaign in campaigns %}
+
+                {% for invite in sponsor_invites %}
+                {% if campaign.id == invite.campaign_id %}
+                {% if invite.accepted == True %}
+                    <div class="card col-5 mb-3 p-0">
+                        <div class="card-header">
+                            <strong class="text-success">{{ campaign.name }}</strong>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                            
+                                    <strong>Name:</strong>
+                                    {{ campaign.name }}<br/>
+        
+                                    <strong>Offer: Rs.{{ invite.negotiation_amount }}</strong><br/>
+                                    <strong>Description:</strong>{{ campaign.description }}<br/>
+                                    {% if invite.requirements %}
+                                    <strong>Requirements:</strong>{{ invite.requirements }}<br/>
+                                    {% endif %}
+    
+                                    <form method="post">
+                                        <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                        <button type="submit" class="btn btn-sm btn-dark block my-2">View Campaign</button>
+                                    </form>
+    
+                    </div>
+                </div>
+            </div>
+        </p>
+    </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    
+
+                {% for invite in influencer_invites %}
+                
+                {% if campaign.id == invite.campaign_id %}
+                {% if invite.accepted == True and invite.responded == True %}
+                    <div class="card col-5 mb-3 p-0">
+                        <div class="card-header">
+                            <strong class="text-success">{{ campaign.name }}</strong>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                            
+                                    <strong>Name:</strong>
+                                    {{ campaign.name }}<br/>
+        
+                                    <strong>Offer: Rs.{{ invite.offer }}</strong><br/>
+                                    {{ campaign.description }}
+    
+                                    <form method="post">
+                                        <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                        <button type="submit" class="btn btn-sm btn-dark block my-2">View Campaign</button>
+                                    </form>
+    
+                    </div>
+                </div>
+            </div>
+        </p>
+    </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+{% endfor %}
+    </div>
+    </div>
+    {% else %}
+    Sorry, No <strong>Campaigns</strong> were found...
+    {% endif %}
+
+          <a href="{{ url_for('logout')}}" class="btn btn-danger btn-sm">Logout</a>
+          <br/><br/>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+{% endblock %}
+

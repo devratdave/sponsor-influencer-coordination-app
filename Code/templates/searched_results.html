@@ -5,25 +5,113 @@
 	<br/>
 	<h2>You Searched For: <em>{{ searched }}</em></h2>
 	
-	<br/>
-	{% if results %}
-
-	{% for result in results %}
-		<div class="shadow p-3 mb-5 bg-body rounded">
-	<h2>{{ result.name }}</h2>
-	<small>Name: {{ result.name }}<br/>
-	Rs. {{ result.price }} /{{ result.unit }}<br/>
-    Category: {{ result.category }}<br/>
-	Manufacturing Date: {{ result.manufacturingdate.date() }}<br/>
-	Expiry Date: {% if result.expirydate %} {{ result.expirydate.date() }} {% else %} No Expiry 
-	{% endif %}<br/>
-	Stock: {% if result.stock >= 1 %} In Stock {% else %} Out of stock {% endif %}
-	</small> <br/><br/>
+	{% if current_user.type == 'Influencer' %}
+	{% if campaign_searched %}
+<h2>Campaigns</h2><br/>
+	{% for campaign in campaign_searched %}
+	{% for sponsor in sponsors %}
+	{% if campaign.sponsor == sponsor.id %}
+		<div class="shadow p-3 mb-3 bg-body rounded">
+	<h3>{{ campaign.name }}</h3>
+	<small>Name: {{ campaign.name }}<br/>
+	Sponsor Name: {{ campaign.name }}<br/>
+	Offer: Rs.{{ campaign.budget }} per influencer<br/>
+    Influencers Required: {{ campaign.influencers_required }}<br/>
+	Description: {{ campaign.description }}<br/>
+	Status: {% if campaign.completed %} <strong class="text-danger">Completed</strong>{% else %}<strong class="text-primary">Ongoing Campaign</strong>{% endif %}<br/><br/>
+	<a class="btn btn-sm btn-secondary" href="{{ url_for('access_campaign', campaign_id=campaign.id) }}">View Campaign</a>
+	</small> <br/>
 </div>
+	{% endif %}
+	{% endfor %}
+	{% endfor %}
+	
+	{% else %}
+	Sorry, your search term: <strong>{{ searched }}</strong> was not found in campaigns...
+	{% endif %}
+	{% endif %}
+<br/>
+
+
+	{% if current_user.type == 'Sponsor' %}
+	{% if influencers %}
+<h2>Influencers</h2>
+	{% for influencer in influencers %}
+		<div class="shadow p-3 mb-3 bg-body rounded">
+	<h3>{{ influencer.name }}</h3>
+	<small>Name: {{ influencer.name }}<br/>
+	Platforms:- <br/> {% for platform in influencer_platforms %}
+	{% if influencer.id == platform.user_id %}
+	<strong>{{ platform.platform }}</strong> with <strong>{{ platform.followers }}</strong> followers<br/>
+	{% endif %}
+	{% endfor %}
 	<br/>
+	<a class="btn btn-sm btn-primary" href="{{ url_for('access_influencer', influencer_id=influencer.id) }}">View Influencer</a>
+
+	</small> <br/>
+</div>
+	
 		{% endfor %}
 
 	{% else %}
-	Sorry, your search term: <strong>{{ searched }}</strong> was not found...
+	Sorry, your search term: <strong>{{ searched }}</strong> was not found in Influencers...
 	{% endif %}
+	{% endif %}
+
+
+
+
+{% if current_user.type == 'admin' %}
+
+
+{% if campaign_searched_admin %}
+<h2>Campaigns</h2>
+	{% for campaign in campaign_searched_admin %}
+	{% for sponsor in sponsors_admin %}
+	{% if campaign.sponsor == sponsor.id %}
+		<div class="shadow p-3 mb-3 bg-body rounded">
+	{% if campaign.flagged == True %}<h3 class="text-danger">{{ campaign.name }} (Flagged)</h3>{% else %}<h3 class="text-dark">{{ campaign.name }}</h3>{% endif %}
+	<small>Name: {{ campaign.name }}<br/>
+	Sponsor Name:{% if sponsor.flagged == True %}<strong class="text-danger">{{ sponsor.name }} (Flagged)</strong>{% else %}<strong class="text-primary">{{ sponsor.name }}</strong><br/>{% endif %}
+	Offer: Rs.{{ campaign.budget }} per influencer<br/>
+    Influencers Required: {{ campaign.influencers_required }}<br/>
+	Description: {{ campaign.description }}<br/>
+	Status: {% if campaign.completed %} <strong class="text-success">Completed</strong>{% else %}<strong class="text-primary">Ongoing Campaign</strong>{% endif %}<br/><br/>
+	<a class="btn btn-sm btn-secondary" href="{{ url_for('access_campaign', campaign_id=campaign.id) }}">View Campaign</a>
+	</small> <br/>
+</div>
+	
+	{% endif %}
+	{% endfor %}
+	{% endfor %}
+	
+	{% else %}
+	Sorry, your search term: <strong>{{ searched }}</strong> was not found in campaigns...
+	{% endif %}
+<br/>
+
+
+	{% if influencers_admin %}
+<h2>Influencers</h2>
+	{% for influencer in influencers_admin %}
+		<div class="shadow p-3 mb-3 bg-body rounded">
+	{% if influencer.flagged == True %}<h3 class="text-danger">{{ influencer.name }} (Flagged)</h3>{% else %}<h3 class="text-dark">{{ influencer.name }}</h3>{% endif %}
+	<small>Name: {{ influencer.name }}<br/>
+	Platforms:- <br/> {% for platform in influencer_platforms_admin %}
+	{% if influencer.id == platform.user_id %}
+	<strong>{{ platform.platform }}</strong> with <strong>{{ platform.followers }}</strong> followers<br/>
+	{% endif %}
+	{% endfor %}
+	<br/>
+	<a class="btn btn-sm btn-secondary" href="{{ url_for('access_influencer', influencer_id=influencer.id) }}">View Influencer</a>
+
+	</small> <br/>
+</div>
+		{% endfor %}
+
+	{% else %}
+	Sorry, your search term: <strong>{{ searched }}</strong> was not found in Influencers...
+	{% endif %}
+	{% endif %}
+
 {% endblock %}

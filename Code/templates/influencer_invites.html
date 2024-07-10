@@ -1,0 +1,228 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+
+	<div class="w-30 p-3 mb-5 bg-body">
+		<h2>All Invites</h2>
+			<br/>
+        {% if influencer_invites %}
+		{% if campaigns %}
+		<div>
+		<div class="card mb-3">
+    <div class="card-body">
+        <div class="card mb-3 p-0">
+            <div class="card-header">
+                <h3>Pending Sponsor Invites</h3>
+            </div>
+                
+            <div class="card-body">
+                            
+			{% for campaign in campaigns %}
+            {% for invite in influencer_invites %}
+            {% if campaign.id == invite.campaign_id %}
+            {% if invite.accepted == False and invite.rejected == False and invite.negotiated == False and campaign.completed == False %}
+				<div class="card mb-3 p-0">
+					<div class="card-header">
+						<strong>{{ campaign.name }}</strong>
+					</div>
+					<div class="card-body">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ campaign.name }}<br/>
+
+                                <strong>Offer: Rs.{{ campaign.budget }}</strong><br/>
+                                <strong>Campaign Type:</strong>{% if campaign.private %}<strong class="text-danger">Private</strong>{% else %}<strong class="text-primary">Public</strong>{% endif %}<br/>
+
+                                <strong>Influencers Required: {{ campaign.influencers_required }}</strong><br/>
+                                <strong>Description: </strong>{{ campaign.description }}<br/>
+                                {% if invite.requirements %}
+                                <strong>Requirements: </strong>{{ invite.requirements }}<br/>
+                                {% endif %}
+                                <form method="post", action="{{ url_for('influencer_invites') }}">
+                                    <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">View Campaign</button>
+                                </form>
+                                <form method="post", action="{{ url_for('influencer_invites') }}">
+
+                                    <input type="hidden" name="campaign_id" value="{{ campaign.id }}"/>
+                                    <input name="negotiation_amount" default="{{ campaign.budget }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">Negotiate Offer</button>
+                                </form>
+                                <form method="post", action="{{ url_for('influencer_invites') }}">
+                                    <input type="hidden" name="accept" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-success block my-2">Accept Offer</button>
+                                </form>
+                                <form method="post", action="{{ url_for('influencer_invites') }}">
+                                    <input type="hidden" name="reject" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Reject Offer</button>
+                                </form>
+
+				</div>
+			</div>
+		</div>
+</div>
+</div>
+
+{% endif %}
+{% endif %}
+
+{% endfor %}
+{% endfor %}
+
+</div>
+</div>
+<div class="card mb-3 p-0">
+    <div class="card-header">
+        <h3 class="text-primary">Negotiated Invites</h3>
+    </div>
+        
+    <div class="card-body">
+        
+    {% for campaign in campaigns %}
+    {% for invite in influencer_invites %}
+    {% if campaign.id == invite.campaign_id %}
+    {% if invite.accepted == False and invite.rejected == False and invite.negotiated == True and campaign.completed==False %}
+    <div class="card col-5 mb-3 p-0">
+        <div class="card-header">
+            <strong>{{ campaign.name }}</strong>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+            
+                    <strong>Name:</strong>
+                    {{ campaign.name }}<br/>
+
+                    <strong>Offer: Rs.{{ campaign.budget }}</strong><br/>
+
+                    <strong>Negotiation Amount Rs.{{ invite.negotiation_amount }}</strong><br/>
+                    <strong>Influencers Required: {{ campaign.influencers_required }}</strong><br/>
+                    <strong>Description: </strong>{{ campaign.description }}<br/>
+                    {% if invite.requirements %}
+                    <strong>Requirements: </strong>{{ invite.requirements }}<br/>
+                    {% endif %}
+
+    </div>
+</div>
+</div>
+</p>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+</div>
+</div>
+<div class="card mb-3 p-0">
+    <div class="card-header">
+        <h3 class="text-success">Accepted Campaigns</h3>    
+    </div>
+    <div class="card-body">
+       
+
+{% for campaign in campaigns %}
+    {% for invite in influencer_invites %}
+    {% if campaign.id == invite.campaign_id %}
+    {% if invite.accepted == True %}
+    <div class="card col-5 mb-3 p-0">
+        <div class="card-header">
+            <strong>{{ campaign.name }}</strong>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+            
+                    <strong>Name:</strong>
+                    {{ campaign.name }}<br/>
+
+                    <strong>Offer: Rs.{% if invite.negotiated == False %}{{ campaign.budget }}{% else %}{{ invite.negotiation_amount }}{% endif %}</strong><br/>
+                    <strong>Description: </strong>{{ campaign.description }}<br/>
+                    {% if invite.requirements %}
+                    <strong>Requirements: </strong>{{ invite.requirements }}<br/>
+                    {% endif %}
+
+    </div>
+</div>
+</div>
+</p>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+</div>
+</div>
+<div class="card mb-3 p-0">
+    <div class="card-header">
+        <h3 class="text-danger">Rejected Campaigns</h3>    
+    </div>
+    <div class="card-body">
+        
+{% for campaign in campaigns %}
+    {% for invite in influencer_invites %}
+    {% if campaign.id == invite.campaign_id %}
+    {% if invite.rejected == True %}
+    <div class="card col-5 mb-3 p-0">
+        <div class="card-header">
+            <strong>{{ campaign.name }}</strong>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+            
+                    <strong>Name:</strong>
+                    {{ campaign.name }}<br/>
+
+                    <strong>Offer: Rs.{{ campaign.budget }}</strong><br/>
+
+                    {% if invite.negotiated == True %}
+                    <strong>Negotiation Amount: Rs.{{ invite.negotiation_amount }}</strong>
+                    {% endif %}
+
+
+    </div>
+</div>
+</div>
+</p>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+</div>
+</div>
+</div>
+{% else %}
+Sorry, No <strong>Campaigns</strong> were found...
+{% endif %}
+{% else %}
+You have not sent any campaign invites...
+{% endif %}
+
+</div>
+</div>
+{% endblock %}

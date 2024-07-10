@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+
+<div class="shadow p-3 mb-5 bg-body rounded">
+	{% for sponsor in sponsors %}
+	{% for sponsor_detail in sponsor_details %}
+	{% if sponsor.id == sponsor_detail.user_id %}
+    <div class="card m-3">
+		<div class="card-header">
+			{% if sponsor.flagged == True %}<h3 class="text-danger">{{ sponsor.name }}</h3>{% else %}<h3 class="text-dark">{{ sponsor.name }}</h3>{% endif %}
+
+			{% if sponsor.flagged == True %}
+			<form method="post">
+				<input type="hidden" name="unflag_sponsor" value="{{ sponsor.id }}"/>
+				<button type="submit" class="btn btn-sm btn-primary block my-2">Unflag Sponsor</button>
+			</form>
+			{% else %}
+			<form method="post">
+				<input type="hidden" name="flag_sponsor" value="{{ sponsor.id }}"/>
+				<button type="submit" class="btn btn-sm btn-danger block my-2">Flag Sponsor</button>
+			</form>
+			{% endif %}
+		</div>
+          <div class="card-body">
+			<div>
+				Name: <strong>{{ sponsor.name }}</strong><br/>
+				Industry: <strong>{{ sponsor_detail.industry }}</strong><br/>
+				About Us: <strong>{{ sponsor.about_me }}</strong>
+				<br/><br/>
+				<h4>Campaigns</h4><br/>
+			</div>
+            <div class="row d-flex justify-content-around">
+                {% for campaign in campaigns %}
+
+                {% if campaign.sponsor == sponsor.id %}
+                    <div class="card col-5 mb-3 p-0">
+                        <div class="card-header">
+                            {% if campaign.flagged == True %}<strong class="text-danger">{{ campaign.name }} (Flagged)</strong>{% else %}<strong class="text-secondary">{{ campaign.name }}</strong>{% endif %}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                            
+                                    <strong>Name:</strong>
+                                    {{ campaign.name }}<br/>
+        
+                                    <strong>Offer: Rs.{{ campaign.budget }} per influencer</strong><br/>
+                                    <strong>Status:</strong> {% if campaign.completed %}<strong class="text-success">Complete</strong>{% else %}<strong class="text-primary">Ongoing</strong>{% endif %}<br/>
+
+                                    <strong>Description:</strong> {{ campaign.description }}<br/>
+    
+                                    <form method="post">
+                                        <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                        <button type="submit" class="btn btn-sm btn-dark block my-2">View Campaign</button>
+                                    </form>
+    
+                    </div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+    {% endif %}
+    {% endfor %}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+	{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	
+{% endfor %}
+
+<h2>Profile</h2>
+	<br/>
+
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <div class="card">
+        
+        <div class="card-body">
+          <p class="card-text">
+      
+          <strong>Name:</strong>
+          {{ current_user.name }}<br/>
+      
+          <strong>Username:</strong>
+          {{ current_user.username }}<br/>
+      
+          <strong>Role:</strong>
+          {{ current_user.type }}<br/>  
+          </p>
+            <h2 class="mt-3">All Campaigns</h2>
+                 <br/>
+                 {% if campaigns %}
+                 {% for campaign in campaigns %}
+                 <div>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="p-0">
+                                <div class="card-header">
+                                    <strong>{{ campaign.name }}</strong>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-12">
+                                    
+                                            <strong>Name:</strong>
+                                            {{ campaign.name }}<br/>
+
+                                            <strong>Description:</strong>
+                                            {{ campaign.description }}<br/>
+
+                                            <strong>Start Date:</strong>
+                                            {{ campaign.creation_date.date() }}<br/>
+
+                                            <strong>Budget: Rs.{{ campaign.budget }}</strong><br/>
+                                            <strong>Influencers Required:</strong>
+                                            {{ campaign.influencers_required }}<br/>
+                                            <strong>Campaign Type:</strong>
+                                            {% if campaign.private %}<strong class="text-danger">Private</strong>{% else %}<strong class="text-primary">Public</strong>{% endif %}<br/>
+                                            
+
+                                            <strong class="text-success">Influencers Acquired:</strong> </br>
+                                            {% if sponsor_invites %}
+                                            {% for invite in sponsor_invites %}
+                                            {% if campaign.id == invite.campaign_id %}
+                                            {% for user in users %}
+                                            {% if invite.invitee_id == user.id %}
+                                                <strong>{{ user.name }}</strong> with an offer of <strong>Rs.{{ invite.negotiation_amount }}</strong> <br/>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+
+                                            {% if influencer_invites %}
+                                            {% for invite in influencer_invites %}
+                                            {% if campaign.id == invite.campaign_id %}
+                                            {% for user in users %}
+                                            {% if invite.invitor_id == user.id %}
+                                            <strong>{{ user.name }}</strong> with an offer of <strong>Rs.{{ campaign.budget }}</strong> <br/>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+                                            <br/>
+                                            <br/>
+                                            View the campaign to make changes to it.
+                                            <form method="post">
+                                                <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                                <button type="submit" class="btn btn-sm btn-primary block my-2">View Campaign</button>
+                                            </form>
+                                            
+                                            <br/>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            </div>
+            <div class="mx-3">
+                <a href="{{ url_for('logout')}}" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+          <br/><br/>
+          </div>
+        </div>
+
+{% endblock %}
+

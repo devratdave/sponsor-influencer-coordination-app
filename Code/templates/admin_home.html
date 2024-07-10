@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	
+{% endfor %}
+<div class="shadow p-3 mb-5 bg-body rounded d-flex justify-content-around">
+	<a class="btn btn-dark" href="{{ url_for('admin_influencers') }}">View Influencers</a>
+	<a class="btn btn-dark" href="{{ url_for('admin_sponsors') }}">View Sponsors</a>
+</div>
+
+{% if current_user.type=='admin' %}
+<div class="card my-3">
+    <h2 class="card-header">Sponsors in Each Industry</h2>
+    <div class="card-body">
+        <canvas id="mySponsorBarGraph"></canvas>
+        <script>
+            var ctx = document.getElementById('mySponsorBarGraph').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [{%for x in industries%}"{{ x }}",{%endfor%}],
+                    datasets: [{
+                        label: "Sponsor in each Industry",
+                        data: [{%for d in users_in_industry%}{{d}},{%endfor%}],
+                        borderwidth: 5
+                    }]
+                },
+                options: {scales: {y:{beginAtZero: true}}}
+            });
+        </script>
+    </div>
+
+</div>
+
+<div class="card my-3">
+	<h2 class="card-header">Ongoing Campaigns in Each Industry</h2>
+	<div class="card-body">
+		<canvas id="myCampaignBarGraph"></canvas>
+        <script>
+            var ctx = document.getElementById('myCampaignBarGraph').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for x in industries %}"{{ x }}",{% endfor %}],
+                    datasets: [{
+                        label: "Industry wise Ongoing Campaigns",
+                        data: [{% for d in campaigns_in_industry %}{{ d }},{% endfor %}],
+                        borderwidth: 5
+                    }]
+                },
+                options: {scales: {y:{beginAtZero: true}}}
+            });
+        </script>
+	</div>
+
+</div>
+{% endif %}
+{% endblock %}

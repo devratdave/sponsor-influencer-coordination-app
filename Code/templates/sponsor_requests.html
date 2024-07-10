@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	
+{% endfor %}
+
+<h2>My Influencer Invites</h2>
+	<br/>
+
+<div class="shadow p-3 mb-5 bg-body rounded">
+    {% if campaigns %}
+    {% for campaign in campaigns %}
+    {% if campaign.sponsor == current_user.id %}
+    {% if campaign.completed == False %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Campaign: {{ campaign.name }}</strong>
+        </div>
+        <div class="card-body">
+                 <strong>Influencers Required: {{ campaign.influencers_required }}</strong><br/>
+                 <strong>Influencers Acquired: {{ campaign.influencers_acquired }}</strong>
+                 <br/>
+                 <br/>
+                 
+                 
+                 {% if sponsor_requests %}
+                 {% for user in users %}
+                 {% for request in sponsor_requests %}
+                 {% if request.invitor_id == user.id %}
+                 {% if request.campaign_id == campaign.id %}
+                 {% if not request.responded %}
+                 <div>
+                    <div class="card mb-3">
+                                <div class="card-header">
+                                    <strong>{{ user.name }}</strong>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-12">
+                                    
+                                                <strong>Name:</strong>
+                                                {{ user.name }}<br/>
+
+                                                <strong>Offer:</strong>
+                                                {{ request.offer }}<br/>
+                                                
+                                                <strong>Platforms:-</strong><br/>
+                                                {% for platform in influencer_platforms %}
+                                                {% if user.id == platform.user_id %}
+                                                <strong>{{ platform.platform }}</strong> {{ platform.followers }} followers<br/>
+                                                {% endif %}
+                                                {% endfor %}
+
+                                                <form method="POST">
+                                                    <input type="hidden" name="view_influencer" value="{{ request.invitor_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-dark block my-2">View Influencer</button>
+                                                </form>
+
+                                                <form method="POST">
+                                                    <input type="hidden" name="accept" value="{{ request.invitor_id }}"/>
+                                                    <input type="hidden" name="campaign_id" value="{{ request.campaign_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-success block my-2">Accept Request</button>
+                                                </form>
+
+                                                <form method="POST">
+                                                    <input type="hidden" name="reject" value="{{ request.invitor_id }}"/>
+                                                    <input type="hidden" name="campaign_id" value="{{ request.campaign_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Reject Request</button>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                    {% else %}
+                    There are no pending requests.
+                    {% endif %}
+                    
+            </div>
+          </div>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+          {% else %}
+          There are no campaigns. You need to create campaigns to send invites
+          {% endif %}
+{% endblock %}
+

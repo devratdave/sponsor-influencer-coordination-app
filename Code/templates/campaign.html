@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+
+		{% if campaign %}
+		<div>
+		<div class="card mb-3">
+			<div class="card-body row d-flex justify-content-around">
+				<div class="card col-5 mb-3 p-0">
+					<div class="card-header">
+						<strong>{{ campaign.name }}</strong>
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ campaign.name }}<br/>
+
+                                <strong>Sponsor:</strong>{{ sponsor.name }}<br/>
+                                <strong>Start Date:</strong>{{ campaign.creation_date.date() }}<br/>
+
+                                <strong>Influencers Required: </strong>{{ campaign.influencers_required }}<br/>
+                                <strong>Spots Left: </strong>{{ campaign.influencers_required-campaign.influencers_acquired }}<br/>
+
+								<strong>Budget:</strong> Rs.{{ campaign.budget }} per influencer<br/>
+								<strong>Description: </strong>{{ campaign.description }} <br/>
+								<strong>Campaign Type: </strong>{% if campaign.private %}<strong class="text-danger">Private</strong>{% else %}<strong class="text-primary">Public</strong>{% endif %}<br/>
+								{% if current_user.type == 'Sponsor' %}
+								{% if campaign.sponsor == current_user.id %}
+								Status: {% if campaign.completed %}<strong class="text-danger">Completed</strong>{% else %}<strong class="text-primary">Ongoing</strong>{% endif %} <br/>
+
+								<form method="post">
+                                    <input type="hidden" name="edit_campaign" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-primary block my-2">Edit Campaign</button>
+                                </form>
+								<form method="post">
+                                    <input type="hidden" name="delete_campaign" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Delete Campaign</button>
+                                </form>
+								{% endif %}
+								{% endif %}
+
+								{% if current_user.type == 'Influencer' %}
+								{% if campaign.private == False %}
+								{% if campaign.completed==False %}
+                                <form method="post">
+                                    <input type="hidden" name="send_request" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">Send a request</button>
+                                </form>
+								{% else %}
+								<strong class="text-danger">This campaign has been completed.</strong>
+								{% endif %}
+								{% endif %}
+								{% endif %}
+
+								{% if current_user.type == 'admin' %}
+								{% if campaign.flagged == False %}
+								<form method="post">
+                                    <input type="hidden" name="flag" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Flag Campaign</button>
+                                </form>
+								{% else %}
+								<form method="post">
+                                    <input type="hidden" name="unflag" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-primary block my-2">Unflag Campaign</button>
+                                </form>
+								{% endif %}
+								{% endif %}
+
+
+				</div>
+			</div>
+		</div>
+	</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% else %}
+Sorry, No <strong>Campaign</strong> with this ID found...
+{% endif %}
+
+{% endblock %}

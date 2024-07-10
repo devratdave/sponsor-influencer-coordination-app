@@ -1,0 +1,114 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	
+{% endfor %}
+
+<h2>Create Campaign</h2>
+	<br/>
+{% if campaign %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+	<form method="post">
+		{{ form.hidden_tag() }}
+
+		{{ form.name.label(class="form-label") }}
+
+		{% if form.name.errors %}
+					{{ form.name(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in form.name.errors %}
+							<span>
+								{{ error }}
+							</span>
+						{% endfor %}
+					</div>
+				{% else %}
+                Previous Name:<strong>{{ campaign.name }}</strong>
+					{{ form.name(class="form-control form-control-lg") }}
+				{% endif %}
+		<br/>
+
+		{{ form.budget.label(class="form-label") }}
+
+		{% if form.budget.errors %}
+					{{ form.budget(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in form.budget.errors %}
+							<span>
+								{{ error }}
+							</span>
+						{% endfor %}
+					</div>
+				{% else %}
+                Previous Budget per Influencer: <strong>Rs.{{ campaign.budget }}</strong>
+					{{ form.budget(class="form-control form-control-lg") }}
+				{% endif %}
+		<br/>
+
+		{{ form.description.label(class="form-label") }}
+
+		{% if form.description.errors %}
+					{{ form.description(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in form.description.errors %}
+							<span>
+								{{ error }}
+							</span>
+						{% endfor %}
+					</div>
+				{% else %}
+                Previous Description <strong>{{ campaign.description }}</strong>
+					{{ form.description(class="form-control form-control-lg") }}
+				{% endif %}
+		<br/>
+
+		{{ form.influencers_required.label(class="form-label") }}
+
+		{% if form.influencers_required.errors %}
+					{{ form.influencers_required(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in form.influencers_required.errors %}
+							<span>
+								{{ error }}
+							</span>
+						{% endfor %}
+					</div>
+				{% else %}
+                Previous Influencers Required: <strong>{{ campaign.influencers_required }}</strong>
+					{{ form.influencers_required(class="form-control form-control-lg") }}
+				{% endif %}
+
+			<br/>
+		{{ form.private.label(class="form-label") }}
+
+		{% if form.private.errors %}
+					{{ form.private(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in form.private.errors %}
+							<span>
+								{{ error }}
+							</span>
+						{% endfor %}
+					</div>
+				{% else %}
+                Type of Campaign: {% if campaign.private %}<strong class="text-danger">Private</strong>{% else %}<strong class="text-primary">Public</strong> {% endif %}
+				{{ form.private(class="form-control form-control-lg") }}
+				{% endif %}
+		<br/>
+
+		{{ form.submit(class="btn btn-secondary") }}
+
+	</form>
+</div>
+{% else %}
+Wrong campaign...
+{% endif %}
+{% endblock %}

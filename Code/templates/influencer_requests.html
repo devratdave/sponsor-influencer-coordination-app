@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+
+	<div class="w-30 p-3 mb-5 bg-body">
+		<h2>All Requests</h2>
+			<br/>
+        {% if influencer_requests %}
+		{% if campaigns %}
+		<div>
+		<div class="card mb-3">
+			<div class="card-body row d-flex justify-content-around">
+			{% for campaign in campaigns %}
+            {% for request in influencer_requests %}
+			{% if campaign.id == request.campaign_id %}
+				<div class="card col-5 mb-3 p-0">
+					<div class="card-header">
+						{% if request.responded %}
+						<strong>Request Response: {% if request.accepted %}<strong class="text-success">Accepted</strong> {% else %} <strong class="text-danger">Rejected</strong> {% endif %}</strong><br/>
+						{% else %}
+						<strong class="text-primary">Response Due</strong><br/>
+						{% endif %}
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ campaign.name }}<br/>
+
+                                {% if request.responded %}
+                                <strong>Request Response: {% if request.accepted %} Accepted {% else %} Rejected {% endif %}</strong><br/>
+                                {% else %}
+                                <strong>Response Due</strong><br/>
+								{% endif %}
+                                <strong>Offer: {{ request.offer }}</strong><br/>
+
+                                <strong>Influencers Required: {{ campaign.influencers_required }}</strong><br/>
+                                {{ campaign.description }}
+
+                                <form method="post">
+                                    <input type="hidden" name="view_campaign" value="{{ campaign.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">View Campaign</button>
+                                </form>
+
+				</div>
+			</div>
+		</div>
+	</p>
+</div>
+</div>
+{% endif %}
+{% endfor %}
+{% endfor %}
+</div>
+</div>
+</div>
+{% else %}
+Sorry, No <strong>Campaigns</strong> were found...
+{% endif %}
+{% else %}
+You have not sent any campaign requests...
+{% endif %}
+
+</div>
+</div>
+{% endblock %}

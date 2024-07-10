@@ -1,0 +1,121 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	
+{% endfor %}
+
+<h2>Campaign Invites</h2>
+	<br/>
+
+<div class="shadow p-3 mb-5 bg-body rounded">
+    {% if campaigns %}
+    {% for campaign in campaigns %}
+    {% if campaign.completed == False %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Campaign: {{ campaign.name }}</strong>
+        </div>
+        <div class="card-body">
+                 <strong>Offer: Rs.{{ campaign.budget }} per influencer</strong><br/>
+                 <strong>Influencers Required: {{ campaign.influencers_required }}</strong><br/>
+                 <strong>Influencers Acquired: {{ campaign.influencers_acquired }}</strong>
+                 <br/>
+                 <br/>
+                 {% if sponsor_invites %}
+                 {% for user in users %}
+                 {% for invite in sponsor_invites %}
+                 {% if invite.invitee_id == user.id %}
+                 {% if invite.campaign_id == campaign.id %}
+                 <div>
+                    <div class="card mb-3">
+                                <div class="card-header">
+                                    <strong>{{ user.name }}</strong>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-12">
+                                    
+                                                <strong>Name:</strong>
+                                                {{ user.name }}<br/>
+
+                                                <strong>Platforms:-</strong><br/>
+                                                {% for platform in influencer_platforms %}
+                                                {% if user.id == platform.user_id %}
+                                                <strong>{{ platform.platform }}</strong> {{ platform.followers }} followers<br/>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% if invite.requirements %}
+                                                <strong>Requirements: </strong>{{ invite.requirements }}<br/>
+                                                {% endif %}
+                                                <strong>Response:</strong>
+                                                {% if invite.accepted %}
+                                                <strong class="text-success">Accepted</strong><br/>
+
+                                                {% elif invite.rejected %}
+                                                <strong class="text-danger">Rejected</strong><br/>
+
+                                                {% elif invite.negotiated %}
+                                                <strong>Negotiation Amount:</strong>
+                                                {{ invite.negotiation_amount }}<br/>
+                                                
+                                                <form method="POST">
+                                                    <input type="hidden" name="accept" value="{{ invite.invitee_id }}"/>
+                                                    <input type="hidden" name="campaign_id" value="{{ invite.campaign_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-success block my-2">Accept</button>
+                                                </form>
+                                                <form method="POST">
+                                                    <input type="hidden" name="reject" value="{{ invite.invitee_id }}"/>
+                                                    <input type="hidden" name="campaign_id" value="{{ invite.campaign_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Reject</button>
+                                                </form>
+                                                <form method="POST">
+                                                    <input type="hidden" name="delete_id" value="{{ invite.invitee_id }}"/>
+                                                    <input type="hidden" name="campaign_id" value="{{ invite.campaign_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Delete Invite</button>
+                                                </form>
+                                                {% else %}
+                                                Response Due
+                                                <form method="POST">
+                                                    <input type="hidden" name="delete_id" value="{{ invite.invitee_id }}"/>
+                                                    <input type="hidden" name="campaign_id" value="{{ invite.campaign_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-danger block my-2">Delete Invite</button>
+                                                </form>
+                                                <form method="POST">
+                                                    <input type="hidden" name="view_influencer" value="{{ invite.invitee_id }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-dark block my-2">View Influencer</button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                    {% else %}
+                    There are no pending invites.
+                    {% endif %}
+                    
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+          {% else %}
+          There are no campaigns. You need to create campaigns to send invites
+          {% endif %}
+{% endblock %}
+

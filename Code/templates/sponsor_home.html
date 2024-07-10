@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+
+	<div class="w-30 p-3 mb-5 bg-body">
+		<h2>All Influencers</h2>
+			<br/>
+		{% if influencers %}
+		<div>
+		<div class="card mb-3">
+			<div class="card-body row d-flex justify-content-around">
+			{% for influencer in influencers %}
+				<div class="card col-5 mb-3 p-0">
+					<div class="card-header">
+						{{ influencer.name }}
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+							<div class="container">
+								<div class="row">
+									<div class="col-12">
+						
+								<strong>Name:</strong>
+								{{ influencer.name }}<br/>
+
+								<strong>Platforms:-</strong><br/>
+								{% for platform in influencer_platforms %}
+								{% if influencer.id == platform.user_id %}
+								<strong>{{ platform.platform }}</strong> {{ platform.followers }} followers<br/>
+								{% endif %}
+								{% endfor %}
+								<form method="POST", action="{{ url_for('sponsor_home') }}">
+	
+                                    <input type="hidden" name="view_influencer" value="{{ influencer.id }}"/>
+                                    <button type="submit" class="btn btn-sm btn-dark block my-2">View Influencer</button>
+                                </form>
+				</div>
+			</div>
+		</div>
+	</p>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endif %}
+</div>
+</div>
+{% endblock %}
